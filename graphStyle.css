@@ -1,0 +1,34 @@
+svg {
+    background-color:white;
+    border-style: solid;}
+
+.arrow {
+    stroke: black;
+    stroke-width: 1;
+    fill: "none";}
+
+.node {
+    stroke-width: 2;
+    fill: white;
+    fill-opacity: 0;}
+
+#number {
+    stroke: red;}
+
+#sign {
+    stroke: blue;}
+
+#func {
+    stroke: yellow;}
+
+text {
+    font-weight: normal;}
+
+#textNumber {
+    stroke: black;}
+
+#textSign {
+    stroke: green;}
+
+#textFunc {
+    stroke: orange;}
