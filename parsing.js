@@ -172,13 +172,13 @@ function parseU() {
         getNextLexeme();
 
         if (currentLexeme.str != '(')
-            flagIsExpressionGood = false;
+            throw new MyException("Miss open bracket", index-currentLexeme.str.length);
         getNextLexeme();
 
         parseE();
 
         if (currentLexeme.str != ')')
-            flagIsExpressionGood = false;
+            throw new MyException("Miss close bracket", index-currentLexeme.str.length);
         getNextLexeme();
         //push func
         currentNode.key = func;
@@ -195,10 +195,10 @@ function parseU() {
         parseE();
 
         if (currentLexeme.str != ')')
-            flagIsExpressionGood = false;
+            throw new MyException("Miss close bracket", index-currentLexeme.str.length);
         getNextLexeme();
     } else {
-        flagIsExpressionGood = false;
+        throw new MyException("Miss number/function/open bracket", index-currentLexeme.str.length);
     }
 }
 

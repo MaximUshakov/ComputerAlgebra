@@ -35,7 +35,7 @@ function gc() {
         currentChar = inputExpression[index];
         index ++;
     } else {
-        flagIsExpressionGood = false;
+        throw new MyException("End of expression hasn't been found", inputExpression.length);
     }
 }
 
@@ -79,10 +79,16 @@ function getNextLexeme() {
                 currentLexeme.type = "end";
                 currentLexeme.str = currentString;
                 currentLexeme.value = 0;
+
+                if (index != inputExpression.length)
+                    throw new MyException("Unavailable symbol", index);
+
+                //поскольку после считывания символа конца строки считывание нового символа не происходит, то
+                //чтобы сохранить структуру вс равно увеличиваем индекс на 1
+                index++;
                 return;
             } else {
-                flagIsExpressionIsGood = false;
-                return;
+                throw new MyException("Unavailable symbol", index);
             }
             break;
 
@@ -98,8 +104,7 @@ function getNextLexeme() {
                     currentLexeme.value = 0;
                     return;
                 } else {
-                    flagIsExpressionGood = false;
-                    return;
+                    throw new MyException("Unavailable function", index-currentString.length);
                 }
             }
             break;

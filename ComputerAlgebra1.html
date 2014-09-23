@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <script type="text/javascript" src="lexeme_analyzer.js"></script>
+    <script type="text/javascript" src="exception.js"></script>
     <script type="text/javascript" src="parsing.js"></script>
     <script type="text/javascript" src="d3.min.js"></script>
     <link rel="stylesheet" type="text/css" href="graphStyle.css"/>
@@ -19,11 +20,13 @@
     в случае неверно введённого выражения дерево не построится. </p>
 
 <form>
-    <input name="text" type="text" size="100" id="text">Input expression</textarea>
-    <input id="submit" type="button" value="submit"/>
+    <input name="text" type="text" size="100" id="text" value="Введите выражение"/>
+    <input id="submit" type="button" value="Подтвердить"/>
 </form>
 
-<svg width = "1000" height = "600" viewBox="100 200 1000 600">
+<text id="ErrorLabel"/>
+
+<svg width = "1000" height = "600" viewBox="0 0 1000 600">
     <def>
         <g id="textLabel">
             <text id="textOfLabel"/>
@@ -76,11 +79,22 @@
         d3.select("svg").selectAll("path").remove();
         //
 
-        gc();
-        getNextLexeme();
-        parseE();
+        try {
+            gc();
+            getNextLexeme();
+            parseE();
+        } catch (ex) {
+
+            d3.select("svg").append("text")
+            .attr("y", 30)
+            .attr("x", 20)
+            .text(function(d){return ex.out();})
+
+            flagIsExpressionGood = false;
+        }
+
         if (flagIsExpressionGood)
-            tree.drawSubtree(600, 230, 500);
+            tree.drawSubtree(500, 30, 500);
 
     }
 
