@@ -6,7 +6,6 @@
     <script type="text/javascript" src="exception.js"></script>
     <script type="text/javascript" src="parsing.js"></script>
     <script type="text/javascript" src="d3.min.js"></script>
-    <script type="text/javascript" src="graphDraw.js"></script>
     <link rel="stylesheet" type="text/css" href="graphStyle.css"/>
     <title>Expression division tree</title>
 
@@ -27,7 +26,7 @@
 
 <text id="ErrorLabel"/>
 
-<!--svg width = "1000" height = "600" viewBox="0 0 1000 600">
+<svg width = "1000" height = "600" viewBox="0 0 1000 600">
     <def>
         <g id="textLabel">
             <text id="textOfLabel"/>
@@ -58,7 +57,7 @@
         </g>
 
     </def>
-</svg-->
+</svg>
 
 <script type="text/javascript">
 
@@ -75,10 +74,9 @@
         tree = new Node(null, null);
         currentNode = tree;
 
-        d3.select("svg").remove();
-        /*d3.select("svg").selectAll("use").remove();
+        d3.select("svg").selectAll("use").remove();
         d3.select("svg").selectAll("text").remove();
-        d3.select("svg").selectAll("path").remove();*/
+        d3.select("svg").selectAll("path").remove();
         //
 
         try {
@@ -86,11 +84,6 @@
             getNextLexeme();
             parseE();
         } catch (ex) {
-
-            d3.select("body").append("svg")
-            .attr("width", 800)
-            .attr("height", 50)
-            .attr("viewBox", "0 0 800 50")
 
             d3.select("svg").append("text")
             .attr("y", 30)
@@ -101,7 +94,7 @@
         }
 
         if (flagIsExpressionGood)
-            tree.DrawGraph();
+            tree.drawSubtree(500, 30, 500);
 
     }
 

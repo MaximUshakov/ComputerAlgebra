@@ -7,22 +7,18 @@ svg {
     stroke-width: 1;
     fill: "none";}
 
-.number {
+.node {
     stroke-width: 2;
     fill: white;
-    fill-opacity: 0;
+    fill-opacity: 0;}
+
+#number {
     stroke: red;}
 
-.sign {
-    stroke-width: 2;
-    fill: white;
-    fill-opacity: 0;
+#sign {
     stroke: blue;}
 
-.func {
-    stroke-width: 2;
-    fill: white;
-    fill-opacity: 0;
+#func {
     stroke: yellow;}
 
 text {
