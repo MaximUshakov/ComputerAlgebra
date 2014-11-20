@@ -57,12 +57,16 @@ Node.prototype.deleteNode = function() {
 Node.prototype.DrawArrows = function(canvas) {
 
     if (this.leftChild != null) {
+        texCommand = texCommand + "\\qbezier("+this.x+","+yChange(this.y+heightElement/2)+")("+((this.x+this.leftChild.x)/2)+","+yChange(((this.y+heightElement/2)+(this.leftChild.y-heightElement/2))/2)+")("+this.leftChild.x+","+yChange(this.leftChild.y-heightElement/2)+")";
+
         canvas.append("path")
         .attr("d","M"+this.x+" "+(this.y+heightElement/2)+" L"+this.leftChild.x+" "+(this.leftChild.y-heightElement/2)+" Z")
         .attr("stroke", "black");
     }
 
     if (this.rightChild != null) {
+        texCommand = texCommand + "\\qbezier("+this.x+","+yChange(this.y+heightElement/2)+")("+((this.x+this.rightChild.x)/2)+","+yChange(((this.y+heightElement/2)+(this.rightChild.y-heightElement/2))/2)+")("+this.rightChild.x+","+yChange(this.rightChild.y-heightElement/2)+")";
+
         canvas.append("path")
         .attr("d","M"+this.x+" "+(this.y+heightElement/2)+" L"+this.rightChild.x+" "+(this.rightChild.y-heightElement/2)+" Z")
         .attr("stroke", "black");
@@ -72,6 +76,11 @@ Node.prototype.DrawArrows = function(canvas) {
 Node.prototype.DrawNode = function(canvas) {
 
     if (this.key.type == "func") {
+        var textLabel = this.key.str;
+
+        texCommand = texCommand + "\\put("+this.x+","+yChange(this.y)+"){\\oval("+(2*rFunc)+","+heightElement+")}";
+        texCommand = texCommand + "\\put("+(this.x-3*rFunc/8)+","+yChange(this.y+2*heightElement/8)+"){"+textLabel+"}";
+
         canvas.append("ellipse")
         .attr("class", "func")
         .attr("cy", this.y)
@@ -79,26 +88,38 @@ Node.prototype.DrawNode = function(canvas) {
         .attr("ry", heightElement/2)
         .attr("rx", rFunc);
 
-        var textLabel = this.key.str;
         canvas.append("text")
         .attr("y", this.y+2*heightElement/8)
         .attr("x", this.x-3*rFunc/8)
         .text(function(d){return textLabel;});
 
     } else if (this.key.type == "sign") {
+        var textLabel = this.key.str;
+
+        texCommand = texCommand + "\\put("+this.x+","+yChange(this.y)+"){\\circle{"+heightElement+"}}";
+        texCommand = texCommand + "\\put("+(this.x-heightElement/5)+","+yChange(this.y+2*heightElement/8)+"){"+textLabel+"}";
+
         canvas.append("circle")
         .attr("class", "sign")
         .attr("cy", this.y)
         .attr("cx", this.x)
         .attr("r", heightElement/2);
 
-        var textLabel = this.key.str;
         canvas.append("text")
         .attr("y", this.y+2*heightElement/8)
         .attr("x", this.x-heightElement/5)
         .text(function(d){return textLabel;});
 
     } else if (this.key.type == "number") {
+        var textLabel = this.key.str;
+
+        texCommand = texCommand + "\\put("+(this.x-rNumber)+","+yChange(this.y-heightElement/2)+"){\\line(1,0){"+(2*rNumber)+"}}";
+        texCommand = texCommand + "\\put("+(this.x+rNumber)+","+yChange(this.y-heightElement/2)+"){\\line(0,-1){"+heightElement+"}}";
+        texCommand = texCommand + "\\put("+(this.x+rNumber)+","+yChange(this.y+heightElement/2)+"){\\line(-1,0){"+(2*rNumber)+"}}";
+        texCommand = texCommand + "\\put("+(this.x-rNumber)+","+yChange(this.y+heightElement/2)+"){\\line(0,1){"+heightElement+"}}";
+
+        texCommand = texCommand + "\\put("+(this.x-heightElement/5)+","+yChange(this.y+2*heightElement/8)+"){"+textLabel+"}";
+
         canvas.append("rect")
         .attr("class", "number")
         .attr("width", 2*rNumber)
@@ -106,7 +127,6 @@ Node.prototype.DrawNode = function(canvas) {
         .attr("y", this.y-heightElement/2)
         .attr("x", this.x-rNumber);
 
-        var textLabel = this.key.str;
         canvas.append("text")
         .attr("y", this.y+3*heightElement/8)
         .attr("x", this.x-3*rNumber/4)
@@ -142,7 +162,9 @@ Node.prototype.DrawGraph = function() {
     .attr("height", heightSVG)
     .attr("viewBox", "0 0 "+widthSVG+" "+heightSVG);
 
+    texCommand = texCommand + "\\begin{picture}("+widthSVG+","+(heightSVG-yBegin/2)+")";
     this.DrawSubtree(canvas);
+    texCommand = texCommand + "\\end{picture}";
 }
 
 //задаёт ширину подграфа и возвращает её
@@ -236,6 +258,7 @@ Node.prototype.SetCoordinatesNE = function(currentX, currentY) {
     this.x = currentX;
     this.y = currentY;
 
+
     if (this.leftChild != null && this.rightChild != null) {
         this.leftChild.SetCoordinatesNE(currentX - (this.leftChild.rightWidth+Dx/2), currentY+Dy);
         this.rightChild.SetCoordinatesNE(currentX + (this.rightChild.leftWidth+Dx/2), currentY+Dy);
@@ -248,6 +271,11 @@ Node.prototype.SetCoordinatesNE = function(currentX, currentY) {
             maxY = currentY;
     }
 }
+
+function yChange(y) {
+    return (maxY + 2*yBegin-y);
+}
+
 //константы, связанные с canvas svg
 var xBegin = 50;
 var yBegin = 30;
@@ -259,4 +287,6 @@ var heightElement = 20;
 var rSign = 10;
 var rFunc = 20;
 var rNumber = 16;
+
+var texCommand = '';
 //

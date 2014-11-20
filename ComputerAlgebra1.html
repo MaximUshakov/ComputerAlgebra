@@ -5,7 +5,9 @@
     <script type="text/javascript" src="lexeme_analyzer.js"></script>
     <script type="text/javascript" src="exception.js"></script>
     <script type="text/javascript" src="parsing.js"></script>
+    <script type="text/javascript" src="main_tree_draw.js"></script>
     <script type="text/javascript" src="d3.min.js"></script>
+    <script type="text/javascript" src="jquery-2.1.1.min.js"></script>
     <script type="text/javascript" src="graphDraw.js"></script>
     <link rel="stylesheet" type="text/css" href="graphStyle.css"/>
     <title>Expression division tree</title>
@@ -23,6 +25,10 @@
 <form>
     <input name="text" type="text" size="100" id="text" value="Введите выражение"/>
     <input id="submit" type="button" value="Подтвердить"/>
+</form>
+
+<form>
+    <input id="history" type="button" value="История"/>
 </form>
 
 <text id="ErrorLabel"/>
@@ -64,45 +70,20 @@
 
 
     var elem2 = document.getElementById('submit');
+    var elem = document.getElementById('history');
+
+    elem.onclick = function() {
+        window.location.href = 'showhistory.php';
+    }
 
     elem2.onclick = function() {
-        //обнуляем счётчики
-        inputExpression = document.getElementById('text').value+'$';
-        index = 0;
-        currentChar = '';
-        flagIsExpressionGood = true;
 
-        tree = new Node(null, null);
-        currentNode = tree;
+        MainTreeDraw(document.getElementById('text').value);
 
-        d3.select("svg").remove();
-        /*d3.select("svg").selectAll("use").remove();
-        d3.select("svg").selectAll("text").remove();
-        d3.select("svg").selectAll("path").remove();*/
-        //
-
-        try {
-            gc();
-            getNextLexeme();
-            parseE();
-        } catch (ex) {
-
-            d3.select("body").append("svg")
-            .attr("width", 800)
-            .attr("height", 50)
-            .attr("viewBox", "0 0 800 50")
-
-            d3.select("svg").append("text")
-            .attr("y", 30)
-            .attr("x", 20)
-            .text(function(d){return ex.out();})
-
-            flagIsExpressionGood = false;
-        }
-
-        if (flagIsExpressionGood)
-            tree.DrawGraph();
-
+        //записываем запрос в файл
+        requestText = document.getElementById('text').value;
+        $.post('http://maximushakov.1gb.ru/history.php', {request: requestText, tree: texCommand});
+      //window.location.href = 'puthist_pdf.php';
     }
 
 </script>
